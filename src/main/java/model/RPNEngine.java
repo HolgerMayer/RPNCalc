@@ -9,6 +9,14 @@ class SquareRootFromNegativeNumberException extends RuntimeException {
 	private static final long serialVersionUID = 2L;
 };
 
+class LogFromNegativeNumberException extends RuntimeException {
+	private static final long serialVersionUID = 2L;
+};
+
+class Log10FromNegativeNumberException extends RuntimeException {
+	private static final long serialVersionUID = 2L;
+};
+
 
 public class RPNEngine {
 	ShortStack stack;
@@ -89,5 +97,53 @@ public class RPNEngine {
 		stack.push(Math.sqrt(a));
 	}
 	
+	public void log() {
+		double a = stack.pop();
+		
+		if (a == 0) {
+			throw new LogFromNegativeNumberException();
+		}
+		
+		
+		stack.push(Math.log(a));
+	}
+	
+	public void log10() {
+		double a = stack.pop();
+		
+		if (a == 0) {
+			throw new Log10FromNegativeNumberException();
+		}
+		
+		
+		stack.push(Math.log10(a));
+	}
+	
+	public void hmmssToDecDegreeConversion() {
+		
+		double a = stack.pop();
+		
+		int hours = (int) a;
+		int minutes = (int)(( a-  (double) hours ) * 100); 
+		double  seconds = ( a - (double) hours) * 100 - ((double) minutes * 100);
+		
+		double result = (double) hours + (double) minutes / 60 + seconds / 3600;
+		
+		stack.push(result);
+	}
+	
+	
+	public void decDegreeToHMMSSConversion() {
+		double a = stack.pop();
+		
+		int hours = (int) a;
+		int minutes = (int)((a - (double) hours) / 60) *3600;
+		double seconds = (a - (double) hours) - ((double) minutes) / 60.0 * 3600;
+		
+		double result = (double) hours + (double) minutes / 100 + seconds / 10000;
+		
+		stack.push(result);
+
+	}
 	
 }

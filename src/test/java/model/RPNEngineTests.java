@@ -210,4 +210,85 @@ public class RPNEngineTests {
 		     fail("Should have thrown a SquareRootFromNegativeNumberException");
 	     }
 	}
+	
+
+	@Test
+	public void testLog() {
+		testObject.push(2.7183);
+		
+	     try {
+	    	 testObject.log();
+
+	    	 assertTrue(testObject.top() - 1 < 0.0001);
+	    	 
+	     } catch (LogFromNegativeNumberException e1) {
+	    	 fail("Should not have thrown a LogFromNegativeNumberException");
+	     } catch (final RuntimeException e) {
+		     fail("Should not have thrown a RuntimeException");
+	     }
+	}
+
+	@Test
+	public void testLogFromZero() {
+		testObject.push(0);
+		
+	     try {
+	    	 testObject.log();
+
+	    	 fail("Should have thrown a Log10FromNegativeNumberException");
+	     } catch (LogFromNegativeNumberException e1) {
+	    	 assertTrue(true);	
+	     } catch (final RuntimeException e) {
+		     fail("Should not have thrown a RuntimeException");
+	     }
+	}
+	
+	@Test
+	public void testLog10() {
+		testObject.push(100);
+		
+	     try {
+	    	 testObject.log10();
+
+	    	 assertTrue(testObject.top() -2 < 0.0001);
+	    	 
+	     } catch (Log10FromNegativeNumberException e1) {
+	    	 fail("Should not have thrown a Log10FromNegativeNumberException");
+	     } catch (final RuntimeException e) {
+		     fail("Should not have thrown a RuntimeException");
+	     }
+	}
+	
+	@Test
+	public void testLog10FromZero() {
+		testObject.push(0);
+		
+	     try {
+	    	 testObject.log10();
+
+	    	 fail("Should have thrown a Log10FromNegativeNumberException");
+	     } catch (Log10FromNegativeNumberException e1) {
+	    	 assertTrue(true);	
+	     } catch (final RuntimeException e) {
+		     fail("Should not have thrown a RuntimeException");
+	     }
+	}
+	
+	@Test
+	public void testhmmsToDecDegree() {
+		testObject.push(1.2345);
+		
+		testObject.hmmssToDecDegreeConversion();
+		
+		assertTrue(testObject.top() - 1.1404 <= 0.0001);
+	}
+	
+	@Test
+	public void testDecDegreeToHMMSS() {
+		testObject.push(1.1404);
+		
+		testObject.decDegreeToHMMSSConversion();
+		
+		assertTrue(testObject.top() - 1.2345 <= 0.0001);
+	}
 }
