@@ -25,4 +25,30 @@ public class RPNEngineTests {
 		assertNotNull(testObject.stack);
 	}
 
+	@Test
+	public void testPush() {
+		testObject.push(10);
+		
+		assertTrue(testObject.top() == 10);
+	}
+	
+	@Test
+	public void testPop() {
+		testObject.push(11);
+		
+		assertTrue(testObject.pop() == 11);
+	}
+	
+	@Test
+	public void testAdd() {
+		testObject.push(10);
+		testObject.push(11);
+		
+		testObject.add();
+		
+		assertTrue(testObject.top() == 21);
+	}
+
+
+
 }
