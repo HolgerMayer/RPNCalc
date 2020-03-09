@@ -5,6 +5,11 @@ class DivideByZeroException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 };
 
+class SquareRootFromNegativeNumberException extends RuntimeException {
+	private static final long serialVersionUID = 2L;
+};
+
+
 public class RPNEngine {
 	ShortStack stack;
 	
@@ -62,6 +67,26 @@ public class RPNEngine {
 		
 		
 		stack.push(Math.abs(a));
+	}
+	
+	
+	public void pow() {
+		double exponent = stack.pop();
+		double base = stack.pop();
+		
+		stack.push(Math.pow(base, exponent));
+	}
+	
+	
+	public void sqrt() {
+		double a = stack.pop();
+		
+		if (a < 0) {
+			throw new SquareRootFromNegativeNumberException();
+		}
+		
+		
+		stack.push(Math.sqrt(a));
 	}
 	
 	

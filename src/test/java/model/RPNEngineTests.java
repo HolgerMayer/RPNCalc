@@ -112,12 +112,102 @@ public class RPNEngineTests {
 		
 	     try {
 	    	 testObject.divide();
-	         fail("Should have thrown a DivdeByZeroException");
+
+	    	 fail("Should have thrown a DivdeByZeroException");
 	     } catch (DivideByZeroException e1) {
 	    	 assertTrue(true);	
 	     } catch (final RuntimeException e) {
 		     fail("Should have thrown a DivdeByZeroException");
 	     }
+	}
+	
+	@Test
+	public void testAbsPositive() {
+		testObject.push(6);
+		
+		testObject.abs();
+		
+		assertTrue(testObject.top() == 6);
+	}
+	
+	@Test
+	public void testAbsNegative() {
+		testObject.push(-3);
+		
+		testObject.abs();
+		
+		assertTrue(testObject.top() == 3);
+	}
+	
+	@Test
+	public void testPowBaseZero() {
+		testObject.push(0);
+		testObject.push(6);
+		
+		testObject.pow();
+		
+		assertTrue(testObject.top() == 0);
+	}
+	
+	@Test
+	public void testPowExponentZero() {
+		testObject.push(6);
+		testObject.push(0);
+		
+		testObject.pow();
+		
+		assertTrue(testObject.top() == 1);
+	}
+	
+	@Test
+	public void testPow() {
+		testObject.push(2);
+		testObject.push(5);
+		
+		testObject.pow();
+		
+		assertTrue(testObject.top() == 32);
+	}
+	
+	@Test
+	public void testSqrtFromZero() {
+		testObject.push(0);
+		
+		testObject.sqrt();
+		
+		assertTrue(testObject.top() == 0);
+	}
+	
+	@Test
+	public void testSqrtFromFour() {
+		testObject.push(4);
+		
+		testObject.sqrt();
+		
+		assertTrue(testObject.top() == 2);
+	}
+	
+	@Test
+	public void testSqrtFromNine() {
+		testObject.push(9);
+		
+		testObject.sqrt();
+		
+		assertTrue(testObject.top() == 3);
+	}
+	
+	@Test
+	public void testSqrtFromNegativeNumber() {
+		testObject.push(-6);
+		
+	     try {
+	    	 testObject.sqrt();
 
+	    	 fail("Should have thrown a SquareRootFromNegativeNumberException");
+	     } catch (SquareRootFromNegativeNumberException e1) {
+	    	 assertTrue(true);	
+	     } catch (final RuntimeException e) {
+		     fail("Should have thrown a SquareRootFromNegativeNumberException");
+	     }
 	}
 }
