@@ -1,53 +1,67 @@
 package model;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
 
 public class RPNEngineTests {
 
+	static final double TOLERANCE =  0.0001;
+	
 	RPNEngine testObject;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		testObject = new RPNEngine();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		testObject = null;
 	}
 
 	@Test
 	public void testInitialize() {
-		assertNotNull(testObject.stack);
+		assertEquals(TrigonometricMode.RAD, testObject.trigonometricMode);
 	}
 
 	@Test
 	public void testPush() {
 		testObject.push(10);
 		
-		assertTrue(testObject.top() == 10);
+		assertEquals(10,testObject.getTop(), TOLERANCE);
 	}
 	
 	@Test
 	public void testPop() {
 		testObject.push(11);
 		
-		assertTrue(testObject.pop() == 11);
+		assertEquals(11,testObject.pop(), TOLERANCE);
 	}
 	
-	@Test
-	public void testAdd() {
-		testObject.push(10);
-		testObject.push(11);
+	
+	@ParameterizedTest(name = "#{index}: {0} + {1} = {2}")
+	@CsvSource({
+	    "10,  11,  21",
+	    " 0,  11,  11,",
+	    "-5,   5,   0",
+	})
+	public void testAdd(int a, int b, int expected) {
+		testObject.push(a);
+		testObject.push(b);
 		
 		testObject.add();
 		
-		assertTrue(testObject.top() == 21);
+		assertEquals(expected,testObject.getTop(),TOLERANCE);
+		assertEquals(b,testObject.getLastX(),TOLERANCE);
 	}
+	
 	
 	@Test
 	public void testAdd1StackItem() {
@@ -55,7 +69,8 @@ public class RPNEngineTests {
 		
 		testObject.add();
 		
-		assertTrue(testObject.top() == 11);
+		assertEquals(11,testObject.getTop(),TOLERANCE);
+		assertEquals(11,testObject.getLastX(),TOLERANCE);
 	}
 
 	@Test
@@ -63,7 +78,8 @@ public class RPNEngineTests {
 		
 		testObject.add();
 		
-		assertTrue(testObject.top() == 0);
+		assertEquals(0,testObject.getTop(),TOLERANCE);
+		assertEquals(0,testObject.getLastX(),TOLERANCE);
 	}
 
 	@Test
@@ -73,7 +89,8 @@ public class RPNEngineTests {
 		
 		testObject.subtract();
 		
-		assertTrue(testObject.top() == -1.0);
+		assertEquals(-1.0,testObject.getTop(),TOLERANCE);
+		assertEquals(2,testObject.getLastX(),TOLERANCE);
 	}
 	
 	@Test
@@ -83,7 +100,8 @@ public class RPNEngineTests {
 		
 		testObject.multiply();
 		
-		assertTrue(testObject.top() == 6);
+		assertEquals(6,testObject.getTop(),TOLERANCE);
+		assertEquals(2,testObject.getLastX(),TOLERANCE);
 	}
 	
 	@Test
@@ -92,7 +110,8 @@ public class RPNEngineTests {
 		
 		testObject.multiply();
 		
-		assertTrue(testObject.top() == 0);
+		assertEquals(0,testObject.getTop(),TOLERANCE);
+		assertEquals(2,testObject.getLastX(),TOLERANCE);
 	}
 	
 	@Test
@@ -102,7 +121,8 @@ public class RPNEngineTests {
 		
 		testObject.divide();
 		
-		assertTrue(testObject.top() == 3);
+		assertEquals(3,testObject.getTop(),TOLERANCE);
+		assertEquals(2,testObject.getLastX(),TOLERANCE);
 	}
 	
 	@Test
@@ -110,16 +130,11 @@ public class RPNEngineTests {
 		testObject.push(6);
 		testObject.push(0);
 		
-	     try {
-	    	 testObject.divide();
+   	    Executable when = () -> testObject.divide();
 
-	    	 fail("Should have thrown a DivdeByZeroException");
-	     } catch (DivideByZeroException e1) {
-	    	 assertTrue(true);	
-	     } catch (final RuntimeException e) {
-		     fail("Should have thrown a DivdeByZeroException");
-	     }
-	}
+   	    assertThrows(DivideByZeroException.class ,when);
+
+		}
 	
 	@Test
 	public void testAbsPositive() {
@@ -127,7 +142,8 @@ public class RPNEngineTests {
 		
 		testObject.abs();
 		
-		assertTrue(testObject.top() == 6);
+		assertEquals(6,testObject.getTop(),TOLERANCE);
+		assertEquals(6,testObject.getLastX(),TOLERANCE);
 	}
 	
 	@Test
@@ -136,7 +152,8 @@ public class RPNEngineTests {
 		
 		testObject.abs();
 		
-		assertTrue(testObject.top() == 3);
+		assertEquals(3,testObject.getTop(),TOLERANCE);
+		assertEquals(-3,testObject.getLastX(),TOLERANCE);
 	}
 	
 	@Test
@@ -146,7 +163,8 @@ public class RPNEngineTests {
 		
 		testObject.pow();
 		
-		assertTrue(testObject.top() == 0);
+		assertEquals(0,testObject.getTop(),TOLERANCE);
+		assertEquals(6,testObject.getLastX(),TOLERANCE);
 	}
 	
 	@Test
@@ -156,7 +174,8 @@ public class RPNEngineTests {
 		
 		testObject.pow();
 		
-		assertTrue(testObject.top() == 1);
+		assertEquals(1,testObject.getTop(),TOLERANCE);
+		assertEquals(0,testObject.getLastX(),TOLERANCE);
 	}
 	
 	@Test
@@ -166,7 +185,8 @@ public class RPNEngineTests {
 		
 		testObject.pow();
 		
-		assertTrue(testObject.top() == 32);
+		assertEquals(32,testObject.getTop(),TOLERANCE);
+		assertEquals(5,testObject.getLastX(),TOLERANCE);
 	}
 	
 	@Test
@@ -175,7 +195,8 @@ public class RPNEngineTests {
 		
 		testObject.sqrt();
 		
-		assertTrue(testObject.top() == 0);
+		assertEquals(0,testObject.getTop(),TOLERANCE);
+		assertEquals(0,testObject.getLastX(),TOLERANCE);
 	}
 	
 	@Test
@@ -184,7 +205,8 @@ public class RPNEngineTests {
 		
 		testObject.sqrt();
 		
-		assertTrue(testObject.top() == 2);
+		assertEquals(2,testObject.getTop(),TOLERANCE);
+		assertEquals(4,testObject.getLastX(),TOLERANCE);
 	}
 	
 	@Test
@@ -193,102 +215,109 @@ public class RPNEngineTests {
 		
 		testObject.sqrt();
 		
-		assertTrue(testObject.top() == 3);
+		assertEquals(3,testObject.getTop(),TOLERANCE);
+		assertEquals(9,testObject.getLastX(),TOLERANCE);
 	}
 	
 	@Test
 	public void testSqrtFromNegativeNumber() {
 		testObject.push(-6);
 		
-	     try {
-	    	 testObject.sqrt();
+	    Executable when = () -> testObject.sqrt();
 
-	    	 fail("Should have thrown a SquareRootFromNegativeNumberException");
-	     } catch (SquareRootFromNegativeNumberException e1) {
-	    	 assertTrue(true);	
-	     } catch (final RuntimeException e) {
-		     fail("Should have thrown a SquareRootFromNegativeNumberException");
-	     }
+	    assertThrows(SquareRootFromNegativeNumberException.class ,when);
+
 	}
 	
 
 	@Test
-	public void testLog() {
+	public void testLog() throws LogFromZeroException {
 		testObject.push(2.7183);
 		
-	     try {
-	    	 testObject.log();
+   	 	testObject.log();
 
-	    	 assertTrue(testObject.top() - 1 < 0.0001);
-	    	 
-	     } catch (LogFromNegativeNumberException e1) {
-	    	 fail("Should not have thrown a LogFromNegativeNumberException");
-	     } catch (final RuntimeException e) {
-		     fail("Should not have thrown a RuntimeException");
-	     }
+   	 	assertEquals(1,testObject.getTop(),TOLERANCE);
+		assertEquals(2.7183,testObject.getLastX(),TOLERANCE);
 	}
 
 	@Test
 	public void testLogFromZero() {
 		testObject.push(0);
 		
-	     try {
-	    	 testObject.log();
+ 	    Executable when = () -> testObject.log();
 
-	    	 fail("Should have thrown a Log10FromNegativeNumberException");
-	     } catch (LogFromNegativeNumberException e1) {
-	    	 assertTrue(true);	
-	     } catch (final RuntimeException e) {
-		     fail("Should not have thrown a RuntimeException");
-	     }
+	    assertThrows(LogFromZeroException.class ,when);
 	}
 	
 	@Test
-	public void testLog10() {
+	public void testLog10() throws Log10FromZeroException {
 		testObject.push(100);
-		
-	     try {
-	    	 testObject.log10();
 
-	    	 assertTrue(testObject.top() -2 < 0.0001);
-	    	 
-	     } catch (Log10FromNegativeNumberException e1) {
-	    	 fail("Should not have thrown a Log10FromNegativeNumberException");
-	     } catch (final RuntimeException e) {
-		     fail("Should not have thrown a RuntimeException");
-	     }
+		testObject.log10();
+
+		assertEquals(2,testObject.getTop(),TOLERANCE);
+		assertEquals(100,testObject.getLastX(),TOLERANCE);
 	}
 	
 	@Test
 	public void testLog10FromZero() {
 		testObject.push(0);
 		
-	     try {
-	    	 testObject.log10();
+	    Executable when = () -> testObject.log10();
 
-	    	 fail("Should have thrown a Log10FromNegativeNumberException");
-	     } catch (Log10FromNegativeNumberException e1) {
-	    	 assertTrue(true);	
-	     } catch (final RuntimeException e) {
-		     fail("Should not have thrown a RuntimeException");
-	     }
+	    assertThrows(Log10FromZeroException.class ,when);
 	}
 	
 	@Test
 	public void testhmmsToDecDegree() {
 		testObject.push(1.2345);
-		
+
 		testObject.hmmssToDecDegreeConversion();
-		
-		assertTrue(testObject.top() - 1.1404 <= 0.0001);
+
+		assertTrue(testObject.getTop() - 1.1404 <= 0.0001);
 	}
 	
 	@Test
 	public void testDecDegreeToHMMSS() {
 		testObject.push(1.1404);
-		
+
 		testObject.decDegreeToHMMSSConversion();
+
+		assertTrue(testObject.getTop() - 1.2345 <= 0.0001);
+	}
+	
+	@Test
+	public void testPolarConversion() {
+		testObject.trigonometricMode = TrigonometricMode.DEG;
+		testObject.push(5);
+		testObject.push(10);
 		
-		assertTrue(testObject.top() - 1.2345 <= 0.0001);
+		testObject.polarConversion();
+
+		double rValue = testObject.pop();
+		double angle = testObject.pop();
+		
+		assertEquals(11.1803,rValue,TOLERANCE);
+		assertEquals(26.5651,angle,TOLERANCE);
+		assertEquals(10,testObject.getLastX(),TOLERANCE);
+	}
+	
+	@Test
+	public void testRectangularConversion() {
+		testObject.trigonometricMode = TrigonometricMode.DEG;
+		testObject.push(30);
+		testObject.push(12);
+		
+		testObject.rectangularConversion();
+		
+		double xValue = testObject.pop();
+		double yValue = testObject.pop();
+		
+		assertTrue(xValue - 10.3923 <= 0.0001);
+		assertTrue(yValue - 6.0 <= 0.0001);
+		assertTrue(testObject.getLastX() == 12);
+		assertEquals(10.3923,xValue,TOLERANCE);
+		assertEquals(6,yValue,TOLERANCE);
+		assertEquals(12,testObject.getLastX(),TOLERANCE);
 	}
 }

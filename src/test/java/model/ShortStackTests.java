@@ -1,11 +1,13 @@
 package model;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ShortStackTests {
 
+	static final double TOLERANCE = 0.0001;
+	
 	ShortStack testObject;
 	
 	
@@ -14,12 +16,34 @@ public class ShortStackTests {
 		
 		testObject = new ShortStack();
 				
-		assertTrue(testObject.x == 0.0);
-		assertTrue(testObject.y == 0.0);
-		assertTrue(testObject.z == 0.0);
-		assertTrue(testObject.t == 0.0);
+		assertEquals(0.0, testObject.getX(),TOLERANCE);
+		assertEquals(0.0, testObject.getY(),TOLERANCE);
+		assertEquals(0.0, testObject.getZ(),TOLERANCE);
+		assertEquals(0.0, testObject.getT(),TOLERANCE);
+		assertEquals(0.0, testObject.getLastX(),TOLERANCE);
 	}
 	
+	@Test
+	public void testClear() {
+		
+		testObject = new ShortStack();
+		testObject.push(1);
+		testObject.saveToLastXAndPop();
+		testObject.push(1);
+		testObject.push(2);
+		testObject.push(3);
+		testObject.push(4);
+
+		testObject.clear();
+		
+		assertEquals(0.0, testObject.getX(),TOLERANCE);
+		assertEquals(0.0, testObject.getY(),TOLERANCE);
+		assertEquals(0.0, testObject.getZ(),TOLERANCE);
+		assertEquals(0.0, testObject.getT(),TOLERANCE);
+		assertEquals(0.0, testObject.getLastX(),TOLERANCE);
+	}
+	
+
 	@Test
 	public void testPush() {
 		
@@ -31,11 +55,13 @@ public class ShortStackTests {
 		testObject.push(4);
 		
 		
-		assertTrue(testObject.x == 4.0);
-		assertTrue(testObject.y == 3.0);
-		assertTrue(testObject.z == 2.0);
-		assertTrue(testObject.t == 1.0);
+		assertEquals(4.0, testObject.getX(),TOLERANCE);
+		assertEquals(3.0, testObject.getY(),TOLERANCE);
+		assertEquals(2.0, testObject.getZ(),TOLERANCE);
+		assertEquals(1.0, testObject.getT(),TOLERANCE);
+		assertEquals(0.0, testObject.getLastX(),TOLERANCE);
 	}
+	
 	
 	@Test
 	public void testPop() {
@@ -51,22 +77,54 @@ public class ShortStackTests {
 		double result;
 		
 		result = testObject.pop();
-		assertTrue(result == 4.0);
+		assertEquals(4.0, result,TOLERANCE);
 		
 		result = testObject.pop();
-		assertTrue(result == 3.0);
+		assertEquals(3.0, result,TOLERANCE);
 
 		result = testObject.pop();
-		assertTrue(result == 2.0);
+		assertEquals(2.0, result,TOLERANCE);
 
 		result = testObject.pop();
-		assertTrue(result == 1.0);
-
+		assertEquals(1.0, result,TOLERANCE);
 		
-		assertTrue(testObject.x == 1.0);
-		assertTrue(testObject.y == 1.0);
-		assertTrue(testObject.z == 1.0);
-		assertTrue(testObject.t == 1.0);
+		assertEquals(1.0, testObject.getX(),TOLERANCE);
+		assertEquals(1.0, testObject.getY(),TOLERANCE);
+		assertEquals(1.0, testObject.getZ(),TOLERANCE);
+		assertEquals(1.0, testObject.getT(),TOLERANCE);
+		assertEquals(0.0, testObject.getLastX(),TOLERANCE);
+
+	}
+	
+	@Test
+	public void testSaveLastXAndPop() {
+		
+		testObject = new ShortStack();
+		
+		testObject.push(1);
+		testObject.push(2);
+		testObject.push(3);
+		testObject.push(4);
+
+		double result;
+		
+		result = testObject.pop();
+		assertEquals(4.0, result,TOLERANCE);
+		
+		result = testObject.saveToLastXAndPop();
+		assertEquals(3.0, result,TOLERANCE);
+
+		result = testObject.pop();
+		assertEquals(2.0, result,TOLERANCE);
+		
+		result = testObject.pop();
+		assertEquals(1.0, result,TOLERANCE);
+	
+		assertEquals(1.0, testObject.getX(),TOLERANCE);
+		assertEquals(1.0, testObject.getY(),TOLERANCE);
+		assertEquals(1.0, testObject.getZ(),TOLERANCE);
+		assertEquals(1.0, testObject.getT(),TOLERANCE);
+		assertEquals(3.0, testObject.getLastX(),TOLERANCE);
 	}
 
 }
