@@ -320,4 +320,8 @@ public class RPNEngineTests {
 		assertEquals(6,yValue,TOLERANCE);
 		assertEquals(12,testObject.getLastX(),TOLERANCE);
 	}
+	
+	
+	
+	
 }

@@ -1,6 +1,7 @@
 package model;
 
 
+
 class DivideByZeroException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 };
@@ -21,6 +22,32 @@ class Log10FromZeroException extends RuntimeException {
 enum TrigonometricMode {
 	DEG,RAD,GRAD
 }
+
+/**
+ * 
+ * This class implements a reverse polish notation calculator engine.
+ * 
+ * <p>You enter double values on a stack and then call operations. These operations calculate their results
+ * and put these back on the stack.</p>
+ * <p>Usage:</p>
+ * <p>
+ * <ul>
+ * <li>push(2)
+ * <li>push(4)
+ * <li>multiply()
+ * <li>Result : top() == 8
+ * </ul>
+ * </p>
+ * <p></p>
+ * <p>
+ * You can set the data format (DEG,RAD,GRAD) for trigonometric functions. This class internally calculates with radian
+ * and therefore converts DEG or GRAD-Values to radian before calculation and converts results back into GRAD or DEG if a degree 
+ * value is pushed on the stack after calculations. 
+ *</p><p></p>
+ * 
+ * @author Holger Mayer
+ *
+ */
 
 public class RPNEngine {
 
@@ -183,6 +210,93 @@ public class RPNEngine {
 		stack.push(y);
 		stack.push(x);
 	}
+	
+	
+	public void sin() {
+		double a = stack.saveToLastXAndPop();
+		
+		stack.push(Math.sin(convertToRad(a)));
+	}
+
+	public void cos() {
+		double a = stack.saveToLastXAndPop();
+		
+		stack.push(Math.cos(convertToRad(a)));
+	}
+
+	public void tan() {
+		double a = stack.saveToLastXAndPop();
+		
+		stack.push(Math.tan(convertToRad(a)));
+	}
+
+	public void asin() {
+		double a = stack.saveToLastXAndPop();
+		
+		stack.push(convertFromRad(Math.asin(a)));
+	}
+	
+	public void acos() {
+		double a = stack.saveToLastXAndPop();
+		
+		stack.push(convertFromRad(Math.acos(a)));
+	}
+	
+	public void atan() {
+		double a = stack.saveToLastXAndPop();
+		
+		stack.push(convertFromRad(Math.atan(a)));
+	}
+
+	public void sinh() {
+		double a = stack.saveToLastXAndPop();
+		
+		stack.push(Math.sinh(convertToRad(a)));
+	}
+
+	public void cosh() {
+		double a = stack.saveToLastXAndPop();
+		
+		stack.push(Math.cosh(convertToRad(a)));
+	}
+
+	public void tanh() {
+		double a = stack.saveToLastXAndPop();
+		
+		stack.push(Math.tanh(convertToRad(a)));
+	}
+
+	public void permutations() {
+		double x = stack.saveToLastXAndPop();
+		double y = stack.pop();
+		
+		double temp = x - y;
+		
+		double denominator = MathTool.factorial(temp);
+		
+		double numerator = MathTool.factorial(y);
+		
+		stack.push(numerator / denominator);		
+	}
+	
+	
+	public void combinations() {
+		double x = stack.saveToLastXAndPop();
+		double y = stack.pop();
+	
+		double temp = y - x;
+
+		double denominator1 = MathTool.factorial(temp);
+		double denominator2 = MathTool.factorial(x);
+		
+		double denominator = denominator1 * denominator2;
+
+		double numerator = MathTool.factorial(y);
+		
+	
+		stack.push(numerator / denominator);
+	}
+
 	
 	private double convertToRad( double value) {
 		switch (trigonometricMode) {
