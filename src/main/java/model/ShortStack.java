@@ -8,7 +8,7 @@ package model;
  *  <li>the push() function moves x to y, y to z, z to t and removes the old t value. The pushed value is the new x
  *  <li>the pop() function returns x, moves y to x , z to y, t to y and keeps the original t value. pop() does not change 
  *  the lastX variable
- *  <li>the saveToLastXAndPop() function copys the value from the  x variable into the lastX variable and then behaves like pop()  
+ *  <li>the saveToLastXAndPop() function copies the value from the  x variable into the lastX variable and then behaves like pop()  
  *  </ul>
  *  
  * @author Holger Mayer
