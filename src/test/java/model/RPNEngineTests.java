@@ -321,7 +321,115 @@ public class RPNEngineTests {
 		assertEquals(12,testObject.getLastX(),TOLERANCE);
 	}
 	
+	@ParameterizedTest(name = "#{index}: sin({0}) = {1}")
+	@CsvSource({
+		"0.0,0",
+	    "1.57079633,  1",
+	    " 3.14159265,  0",
+	    "4.71238899,   -1",
+	})
+	public void testSin(double a, double expected) {
+		testObject.push(a);
+		
+		testObject.sin();
+		
+		assertEquals(expected,testObject.getTop(),TOLERANCE);
+		assertEquals(a,testObject.getLastX(),TOLERANCE);
+	}
+	
+	@ParameterizedTest(name = "#{index}: cos({0}) = {1}")
+	@CsvSource({
+		"0.0,1",
+	    "1.57079633,  0",
+	    " 3.14159265,  -1",
+	    "4.71238899,   0",
+	})
+	public void testCos(double a, double expected) {
+		testObject.push(a);
+		
+		testObject.cos();
+		
+		assertEquals(expected,testObject.getTop(),TOLERANCE);
+		assertEquals(a,testObject.getLastX(),TOLERANCE);
+	}
+	
+	@ParameterizedTest(name = "#{index}: tan({0}) = {1}")
+	@CsvSource({
+		"0.0,0",
+	    "3.14159265,  0",
+	    "-3.14159265,  0",
+	})
+	public void testTan(double a, double expected) {
+		testObject.push(a);
+		
+		testObject.tan();
+		
+		assertEquals(expected,testObject.getTop(),TOLERANCE);
+		assertEquals(a,testObject.getLastX(),TOLERANCE);
+	}
 	
 	
+	@ParameterizedTest(name = "#{index}: asin({0}) = {1}")
+	@CsvSource({
+		"0.0,0",
+	    "1, 1.57079633",
+	})
+	public void testASin(double a, double expected) {
+		testObject.push(a);
+		
+		testObject.asin();
+		
+		assertEquals(expected,testObject.getTop(),TOLERANCE);
+		assertEquals(a,testObject.getLastX(),TOLERANCE);
+	}
 	
+	@ParameterizedTest(name = "#{index}: acos({0}) = {1}")
+	@CsvSource({
+	    "0, 1.57079633",
+		"1,0",
+	})
+	public void testACos(double a, double expected) {
+		testObject.push(a);
+		
+		testObject.acos();
+		
+		assertEquals(expected,testObject.getTop(),TOLERANCE);
+		assertEquals(a,testObject.getLastX(),TOLERANCE);
+	}
+	
+	@ParameterizedTest(name = "#{index}: atan({0}) = {1}")
+	@CsvSource({
+	    "0, 0",
+		"1,0.7854",
+	})
+	public void testATan(double a, double expected) {
+		testObject.push(a);
+		
+		testObject.atan();
+		
+		assertEquals(expected,testObject.getTop(),TOLERANCE);
+		assertEquals(a,testObject.getLastX(),TOLERANCE);
+	}
+	
+	@Test
+	public void testPermutations() {
+		testObject.push(5);
+		testObject.push(3);
+		
+		testObject.permutations();
+		
+		assertEquals(60,testObject.getTop(),TOLERANCE);
+		assertEquals(3,testObject.getLastX(),TOLERANCE);
+	}
+	
+	@Test
+	public void testCombinations() {
+		testObject.push(52);
+		testObject.push(4);
+		
+		testObject.combinations();
+		
+		assertEquals(270725,testObject.getTop(),TOLERANCE);
+		assertEquals(4,testObject.getLastX(),TOLERANCE);
+	}
 }

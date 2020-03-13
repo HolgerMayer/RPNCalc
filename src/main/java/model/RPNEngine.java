@@ -270,7 +270,7 @@ public class RPNEngine {
 		double x = stack.saveToLastXAndPop();
 		double y = stack.pop();
 		
-		double temp = x - y;
+		double temp = y - x;
 		
 		double denominator = MathTool.factorial(temp);
 		
